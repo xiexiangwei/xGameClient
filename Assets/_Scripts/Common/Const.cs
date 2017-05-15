@@ -3,10 +3,13 @@
     //=======ErrorCode
     public enum ERROR_CODE
     {
-        ERROR_OK = 0,
-        ERROR_MAX_LOGINGATE = 1,
-        ERROR_NO_LOGINGATE = 2,
-        ERROR_NOT_READY_LOGIN = 3,
+       ERROR_OK=0,
+       ERROR_SERVER=1, 
+       ERROR_MAX_LOGINGATE=2,
+       ERROR_NO_LOGINGATE=4,
+       ERROR_NOT_READY_LOGIN=5,
+       ERROR_ACCOUNT_NOT_EXISTS=6,
+       ERROR_ACCOUNT_PWD_ERROR=7
     }
 
     public enum CMD

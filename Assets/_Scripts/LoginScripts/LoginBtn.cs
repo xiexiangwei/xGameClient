@@ -22,7 +22,7 @@ public class LoginBtn : MonoBehaviour
             {   
                 //请求登录
                 CmdMessage.Request_Login req_login = new CmdMessage.Request_Login();
-                req_login.account_name = "xiexiangwei";
+                req_login.account_name = "test";
                 req_login.account_pwd = "123456";
                 //序列化操作
                 MemoryStream ms = new MemoryStream();

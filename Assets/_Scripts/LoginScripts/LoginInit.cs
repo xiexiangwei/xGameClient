@@ -137,14 +137,14 @@ public class LoginInit : MonoBehaviour
 
     private void LG_DataReceived(object sender, DataEventArgs cmd)
     {
-        Debug.Log("LG_DataReceived()");
         var len = BitConverter.ToUInt16(cmd.Data, 0);
         var cmdid = BitConverter.ToUInt16(cmd.Data, 2);
+        byte[] body = new byte[len - 2];
+        Buffer.BlockCopy(cmd.Data, 4, body, 0, len - 2);
+
+        Debug.Log(string.Format("LG_DataReceived() cmdid:{0}",cmdid));
         if (cmdid == (int)Const.CMD.LG2C_READY_TO_LOGIN)
         {
-            byte[] body = new byte[len - 2];
-            Buffer.BlockCopy(cmd.Data, 4, body, 0, len - 2);
-
             var data = Serializer.Deserialize<CmdMessage.Reply_Connect_Logingate>(new MemoryStream(body));
             if (data.error == (int)Const.ERROR_CODE.ERROR_OK)
             {
@@ -153,6 +153,29 @@ public class LoginInit : MonoBehaviour
             else
             {
                 Debug.Log("没有可用的登录服务器!");
+            }
+        }
+        else if (cmdid==(int)Const.CMD.LG2C_LOGIN_RESULT)
+        {
+            var data = Serializer.Deserialize<CmdMessage.Reply_Login>(new MemoryStream(body));
+            if (data.error == (int)Const.ERROR_CODE.ERROR_OK)
+            {
+                Debug.Log(string.Format("登录成功！ account_id:{0} token:{1}", data.account_id, data.token));
+            }
+            else
+            {
+                if(data.error==(int)Const.ERROR_CODE.ERROR_SERVER)
+                {
+                     Debug.Log("游戏服务器逻辑出错!");
+                }
+                else if(data.error==(int)Const.ERROR_CODE.ERROR_ACCOUNT_NOT_EXISTS)
+                {
+                     Debug.Log("帐号不存在!");
+                }
+                else if(data.error==(int)Const.ERROR_CODE.ERROR_ACCOUNT_PWD_ERROR)
+                {
+                     Debug.Log("密码错误!");
+                }
             }
         }
     }
