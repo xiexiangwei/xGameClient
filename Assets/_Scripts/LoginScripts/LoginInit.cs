@@ -6,22 +6,21 @@ using System.Net;
 using System;
 using ProtoBuf;
 using System.IO;
+using UnityEngine.UI;
 
-public class Login : MonoBehaviour {
+public class LoginInit : MonoBehaviour
+{
 
     //管理服务器客户端
     private static AsyncTcpSession smClient;
     private static AsyncTcpSession lgClient;
-
 
     //登录网关IP
     private string logingateIP;
     //登录网关端口
     private int logingatePort;
 
-
-
-    public void SendCmd(AsyncTcpSession client,Const.CMD cmd,byte[] data)
+    private static void SendCmd(AsyncTcpSession client, Const.CMD cmd, byte[] data)
     {
         var lenArray = BitConverter.GetBytes(data.Length + 2);
         var cmdArray = BitConverter.GetBytes((int)cmd);
@@ -37,9 +36,17 @@ public class Login : MonoBehaviour {
 
         client.Send(sendData, 0, sendData.Length);
     }
-    void Start ()
+    public static void Send2LoginGate(Const.CMD cmd, byte[] data)
     {
-        Debug.Log("Start()");
+       SendCmd(lgClient,cmd,data);
+    }
+    public static void Send2SM(Const.CMD cmd, byte[] data)
+    {
+       SendCmd(smClient,cmd,data);
+    }
+    void Start()
+    {
+        Debug.Log("LoginInit Start()");
         smClient = new AsyncTcpSession(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1111));
         smClient.Connected += SM_Connected;
         smClient.DataReceived += SM_DataReceived;
@@ -50,7 +57,7 @@ public class Login : MonoBehaviour {
     private void SM_Connected(object sender, EventArgs e)
     {
         Debug.Log("SM_Connected()");
-        SendCmd(smClient, Const.CMD.C2SM_GET_LOGINGATE, new byte[] { });
+        Send2SM(Const.CMD.C2SM_GET_LOGINGATE, new byte[] { });
     }
 
     private void SM_Closed(object sender, EventArgs e)
@@ -76,13 +83,13 @@ public class Login : MonoBehaviour {
         Debug.Log("SM_DataReceived()");
         var len = BitConverter.ToUInt16(cmd.Data, 0);
         var cmdid = BitConverter.ToUInt16(cmd.Data, 2);
-        if (cmdid ==(int)Const.CMD.SM2C_GET_LOGINGATE_REPLY)
+        if (cmdid == (int)Const.CMD.SM2C_GET_LOGINGATE_REPLY)
         {
             byte[] body = new byte[len - 2];
             Buffer.BlockCopy(cmd.Data, 4, body, 0, len - 2);
 
             var data = Serializer.Deserialize<CmdMessage.RePly_Get_LoginGateInfo>(new MemoryStream(body));
-            if(data.error==(int)Const.ERROR_CODE.ERROR_OK)
+            if (data.error == (int)Const.ERROR_CODE.ERROR_OK)
             {
                 Debug.Log(string.Format("RePly_Get_LoginGateInfo  error:{0} ip:{1} port:{2}", data.error, data.ip, data.port));
                 logingateIP = data.ip;
@@ -106,7 +113,10 @@ public class Login : MonoBehaviour {
 
         }
     }
-
+    private void LG_Connected(object sender, EventArgs e)
+    {
+        Debug.Log("LG_Connected()");
+    }
     private void LG_Closed(object sender, EventArgs e)
     {
         Debug.Log("LG_Closed()");
@@ -144,28 +154,10 @@ public class Login : MonoBehaviour {
             {
                 Debug.Log("没有可用的登录服务器!");
             }
-
         }
     }
-
-    private void LG_Connected(object sender, EventArgs e)
-    {
-        Debug.Log("LG_Connected()");
-    }
-
-
-
-    public void OnLoginClick()
-    {
-        Debug.Log("登录成功");
-    }
-    public void OnApplicationQuit()
-    {
-        
-
-    }
-
-    void OnDestroy()
+ 
+    private void OnDestroy()
     {
         Debug.Log("OnDestroy");
 
@@ -188,14 +180,5 @@ public class Login : MonoBehaviour {
             }
             lgClient = null;
         }
-    }
-    public void OnRegisterLinkClick()
-    {
-        Debug.Log("OnRegisterLinkClick");
-        //SceneManager.LoadScene("TestScene");
-    }
-    public void OnRegisterClick()
-    {
-        Debug.Log("OnRegisterClick");
     }
 }

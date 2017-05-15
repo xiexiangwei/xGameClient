@@ -72,4 +72,45 @@ namespace CmdMessage
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Request_Login")]
+  public partial class Request_Login : global::ProtoBuf.IExtensible
+  {
+    public Request_Login() {}
+    
+    private string _account_name;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"account_name", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string account_name
+    {
+      get { return _account_name; }
+      set { _account_name = value; }
+    }
+    private string _account_pwd;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"account_pwd", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public string account_pwd
+    {
+      get { return _account_pwd; }
+      set { _account_pwd = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Reply_Login")]
+  public partial class Reply_Login : global::ProtoBuf.IExtensible
+  {
+    public Reply_Login() {}
+    
+    private uint _error;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"error", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint error
+    {
+      get { return _error; }
+      set { _error = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }
