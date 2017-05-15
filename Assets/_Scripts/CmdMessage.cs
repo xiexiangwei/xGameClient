@@ -55,4 +55,21 @@ namespace CmdMessage
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Reply_Connect_Logingate")]
+  public partial class Reply_Connect_Logingate : global::ProtoBuf.IExtensible
+  {
+    public Reply_Connect_Logingate() {}
+    
+    private uint _error;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"error", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public uint error
+    {
+      get { return _error; }
+      set { _error = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }

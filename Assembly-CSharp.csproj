@@ -49,6 +49,7 @@
      <Compile Include="Assets\_Scripts\CmdMessage.cs" />
      <Compile Include="Assets\_Scripts\Const.cs" />
      <Compile Include="Assets\_Scripts\Login.cs" />
+     <Compile Include="Assets\_Scripts\Register.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -70,6 +71,9 @@
  <Reference Include="UnityEngine.VR">
  <HintPath>D:/Unity/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
  </Reference>
+ <Reference Include="protobuf-net">
+ <HintPath>D:/U3DPro/xGameClient/Assets/_Plugins/protobuf-net.dll</HintPath>
+ </Reference>
  <Reference Include="SuperSocket.ClientEngine.Common">
  <HintPath>D:/U3DPro/xGameClient/Assets/_Plugins/SuperSocket.ClientEngine.Common.dll</HintPath>
  </Reference>
@@ -81,9 +85,6 @@
  </Reference>
  <Reference Include="SuperSocket.ClientEngine.Proxy">
  <HintPath>D:/U3DPro/xGameClient/Assets/_Plugins/SuperSocket.ClientEngine.Proxy.dll</HintPath>
- </Reference>
- <Reference Include="protobuf-net">
- <HintPath>D:/U3DPro/xGameClient/Assets/_Plugins/protobuf-net.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>D:/Unity/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

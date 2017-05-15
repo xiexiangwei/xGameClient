@@ -24,7 +24,7 @@
         C2LG_Login = 701,
 
         //#登录网关--->客户端消息ID:[801-900]
-        //LG2C_READY_TO_LOGIN=801,
+        LG2C_READY_TO_LOGIN=801,
         LG2C_LOGIN_RESULT = 802,
 
     }
