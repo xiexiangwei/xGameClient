@@ -7,8 +7,9 @@ using ProtoBuf;
 
 public class LoginBtn : MonoBehaviour 
 {
-
-	// Use this for initialization
+    public InputField accountNameInput;
+    public InputField accountPwdInput;
+    // Use this for initialization
     void Start()
     {
         Debug.Log("LoginBtn Start()");
@@ -22,8 +23,9 @@ public class LoginBtn : MonoBehaviour
             {   
                 //请求登录
                 CmdMessage.Request_Login req_login = new CmdMessage.Request_Login();
-                req_login.account_name = "test";
-                req_login.account_pwd = "123456";
+                req_login.account_name = accountNameInput.text;
+                req_login.account_pwd = accountPwdInput.text;
+                Debug.Log(string.Format("请求登陆,account_name:{0} pwd:{1}", req_login.account_name, req_login.account_pwd));
                 //序列化操作
                 MemoryStream ms = new MemoryStream();
                 Serializer.Serialize<CmdMessage.Request_Login>(ms, req_login);

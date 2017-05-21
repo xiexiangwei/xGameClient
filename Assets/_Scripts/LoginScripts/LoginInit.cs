@@ -7,13 +7,16 @@ using System;
 using ProtoBuf;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LoginInit : MonoBehaviour
 {
 
     //管理服务器客户端
-    private static AsyncTcpSession smClient;
-    private static AsyncTcpSession lgClient;
+    private static AsyncTcpSession smClient;//管理服务器客户端
+    private static AsyncTcpSession lgClient;//登录网关客户端
+    private static AsyncTcpSession gcClient;//游戏中心客户端
+    private bool loadGCScene = false;//是否加载游戏中心场景
 
     //登录网关IP
     private string logingateIP;
@@ -83,20 +86,17 @@ public class LoginInit : MonoBehaviour
         Debug.Log("SM_DataReceived()");
         var len = BitConverter.ToUInt16(cmd.Data, 0);
         var cmdid = BitConverter.ToUInt16(cmd.Data, 2);
+        byte[] body = new byte[len - 2];
+        Buffer.BlockCopy(cmd.Data, 4, body, 0, len - 2);
+
         if (cmdid == (int)Const.CMD.SM2C_GET_LOGINGATE_REPLY)
         {
-            byte[] body = new byte[len - 2];
-            Buffer.BlockCopy(cmd.Data, 4, body, 0, len - 2);
-
             var data = Serializer.Deserialize<CmdMessage.RePly_Get_LoginGateInfo>(new MemoryStream(body));
             if (data.error == (int)Const.ERROR_CODE.ERROR_OK)
             {
                 Debug.Log(string.Format("RePly_Get_LoginGateInfo  error:{0} ip:{1} port:{2}", data.error, data.ip, data.port));
                 logingateIP = data.ip;
                 logingatePort = (int)data.port;
-                //主动断开服务器管理连接
-                smClient.Close();
-                smClient = null;
                 //连接登陆网关服务器
                 lgClient = new AsyncTcpSession(new IPEndPoint(IPAddress.Parse(logingateIP), logingatePort));
                 lgClient.Connected += LG_Connected;
@@ -109,6 +109,22 @@ public class LoginInit : MonoBehaviour
             else
             {
                 Debug.Log("没有可用网关!");
+            }
+        }
+        else if (cmdid == (int)Const.CMD.SM2C_GET_GAMECENTER_REPLY)
+        {
+            
+            var data = Serializer.Deserialize<CmdMessage.Reply_Get_GameCenter>(new MemoryStream(body));
+            if (data.error == (uint)Const.ERROR_CODE.ERROR_OK)
+            {
+                Debug.Log(string.Format("请求游戏中心返回  IP:{0} Port:{1}", data.gamecenter_ip, data.gamecenter_port));
+                PublicData.Instance.gcIP = data.gamecenter_ip;
+                PublicData.Instance.gcPort = data.gamecenter_port;
+                loadGCScene = true;
+            }
+            else
+            {
+                Debug.Log(string.Format("获取游戏中心信息失败!  Error:{0}", data.error));
             }
 
         }
@@ -161,6 +177,16 @@ public class LoginInit : MonoBehaviour
             if (data.error == (int)Const.ERROR_CODE.ERROR_OK)
             {
                 Debug.Log(string.Format("登录成功！ account_id:{0} token:{1}", data.account_id, data.token));
+                PublicData.Instance.accountID = data.account_id;
+                PublicData.Instance.userToken = data.token;
+                //请求管理服务器获取游戏中心地址
+                CmdMessage.Request_Get_GameCenter req = new CmdMessage.Request_Get_GameCenter();
+                req.account_id = data.account_id;
+                req.token = data.token;
+                Debug.Log(string.Format("请求获取游戏中心信息 account_id:{0} token:{1}", req.account_id, req.token) );
+                MemoryStream ms = new MemoryStream();
+                Serializer.Serialize(ms, req);
+                Send2SM(Const.CMD.C2SM_GET_GAMECENTER, ms.ToArray());
             }
             else
             {
@@ -177,6 +203,16 @@ public class LoginInit : MonoBehaviour
                      Debug.Log("密码错误!");
                 }
             }
+        }
+    }
+
+    private void Update()
+    {
+        if(loadGCScene)
+        {
+            loadGCScene = false;
+            //加载游戏中心场景
+            SceneManager.LoadSceneAsync("GameCenterScene");
         }
     }
  
