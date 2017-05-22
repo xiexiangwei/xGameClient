@@ -20,12 +20,12 @@ public class GCParse
 					PublicData.Instance.userID = data.user_info.user_id;
 					PublicData.Instance.userName =data.user_info.user_name;
 					PublicData.Instance.userMoney = data.user_info.money;
-					GCInit.showUserInfo = true;
-
 					for (int i = 0; i < data.game_list.Count; i++)
 					{
 						Debug.Log(string.Format("游戏{0} 类型:{1} 服务器IP:{2} 端口:{3}",i,data.game_list[i].game_type, data.game_list[i].game_ip, data.game_list[i].game_port));
 					}
+					//显示玩家信息
+					GCInit.ShowUserInfo(data);
 				}
 				else
 				{
