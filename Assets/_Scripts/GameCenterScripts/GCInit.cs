@@ -14,22 +14,26 @@ public class GCInit : MonoBehaviour {
     public Text userIDText;//玩家ID标签
     public Text userNameText;//玩家昵称标签
     public Text moneyText;//玩家金币标签
-	//委托
-	public delegate void SetTextDelegate(Text ui,string text);
-	public SetTextDelegate SetText;
+
+    public static bool showUserInfo = false;
 
     void Start ()
-    {   
-		SetText = new SetTextDelegate(SetTextFunc);
+    {
         //连接游戏中心
-		gcClient = new GCServer (PublicData.Instance.gcIP, (int)PublicData.Instance.gcPort);
-		gcClient.Start ();
+		gcClient = new GCServer ();
+		gcClient.Start (PublicData.Instance.gcIP, (int)PublicData.Instance.gcPort);
     }
-  
-	private void  SetTextFunc(Text ui,string text)
-	{
-		ui.text = text;
-	}
+
+    private void Update()
+    {
+        if(showUserInfo)
+        {
+            showUserInfo = false;
+            userIDText.text = string.Format("ID:{0}",PublicData.Instance.userID);
+            userNameText.text = string.Format("{0}", PublicData.Instance.userName);
+            moneyText.text = string.Format("金币:{0}", PublicData.Instance.userMoney);
+        }
+    }
 
     private void OnDestroy()
     {

@@ -26,10 +26,9 @@ public class LoginInit : MonoBehaviour
 	void Start()
 	{
 		Debug.Log("LoginInit Start()");
-		smClient = new SMServer("127.0.0.1", 1111);
-		smClient.Start();
+		smClient = new SMServer();
+		smClient.Start("127.0.0.1", 1111);
 	}
-
 
 	private void Update()
 	{
