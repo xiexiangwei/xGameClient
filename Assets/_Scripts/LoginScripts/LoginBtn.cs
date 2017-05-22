@@ -9,7 +9,6 @@ public class LoginBtn : MonoBehaviour
 {
     public InputField accountNameInput;
     public InputField accountPwdInput;
-    // Use this for initialization
     void Start()
     {
         Debug.Log("LoginBtn Start()");
@@ -21,15 +20,23 @@ public class LoginBtn : MonoBehaviour
             Debug.Log(gb.name + " OnClick");
             if (gb.name=="LoginButton")
             {   
-                //请求登录
-                CmdMessage.Request_Login req_login = new CmdMessage.Request_Login();
-                req_login.account_name = accountNameInput.text;
-                req_login.account_pwd = accountPwdInput.text;
-                Debug.Log(string.Format("请求登陆,account_name:{0} pwd:{1}", req_login.account_name, req_login.account_pwd));
-                //序列化操作
-                MemoryStream ms = new MemoryStream();
-                Serializer.Serialize<CmdMessage.Request_Login>(ms, req_login);
-                LoginInit.Send2LoginGate(Const.CMD.C2LG_Login, ms.ToArray());
+				if( LoginInit.canLogin)
+				{
+					//请求登录
+					CmdMessage.Request_Login req_login = new CmdMessage.Request_Login();
+					req_login.account_name = accountNameInput.text;
+					req_login.account_pwd = accountPwdInput.text;
+					Debug.Log(string.Format("请求登陆,account_name:{0} pwd:{1}", req_login.account_name, req_login.account_pwd));
+					//序列化操作
+					MemoryStream ms = new MemoryStream();
+					Serializer.Serialize<CmdMessage.Request_Login>(ms, req_login);
+					LoginInit.Send2LoginGate(Const.CMD.C2LG_Login, ms.ToArray());
+				}
+				else
+				{
+					Debug.Log("不能请求登陆!");
+				}
+               
             }
         };
     }
