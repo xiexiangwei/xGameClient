@@ -25,7 +25,9 @@ public class GCParse
 						Debug.Log(string.Format("游戏{0} 类型:{1} 服务器IP:{2} 端口:{3}",i,data.game_list[i].game_type, data.game_list[i].game_ip, data.game_list[i].game_port));
 					}
 					//显示玩家信息
-					GCInit.ShowUserInfo(data);
+					GCInit.userIDText.Invoke(GCInit.SetText,new object[] {GCInit.userIDText,"玩家ID"});
+					GCInit.userNameText.Invoke(GCInit.SetText,new object[] {GCInit.userNameText,"玩家昵称"});
+					GCInit.moneyText.Invoke(GCInit.SetText,new object[] {GCInit.moneyText,"玩家金币"});
 				}
 				else
 				{
